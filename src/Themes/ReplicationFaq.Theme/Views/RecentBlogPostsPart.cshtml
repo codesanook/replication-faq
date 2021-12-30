@@ -5,9 +5,10 @@
   // We use Model.BlogPost.Classes to add class to ul tag
   model.ListShape.Classes.Add("_list-unstyled");
   IEnumerable<dynamic> blogPosts = model.ListShape;
+  model.ListShape.ItemClasses.Add("recent-item");
 }
 
-<div class="container mt-3 recent-blog-posts">
+<div class="mt-3 recent-blog-posts">
   <h2 class="title">@T["Recent blog posts"]</h2>
 
   @await DisplayAsync(blogPosts)
@@ -17,11 +18,11 @@
     <p>@T["No recent blog posts"]</p>
   }
 
-  @if (model.ShowViewMore)
+  <!-- @if (model.ShowViewMore)
   {
     <div class="view-more">
       <a href="/" class="button">@T["View more"]</a>
     </div>
-  }
+  } -->
 
 </div>

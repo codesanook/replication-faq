@@ -28,8 +28,13 @@ ul {
   font-weight: normal;
 }
 
+:root {
+  font-size: 16px;
+}
+
 html,
 body {
+  font-size: 1rem;
   position: relative;
   font-family: $font;
   color: $primary-color;

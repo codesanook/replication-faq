@@ -1,16 +1,36 @@
 {
-  "Content": [
-    {
-      "place": "-",
-      "contentType": ["Blog"]
-    }
-  ],
   "MediaField": [
     {
-      "place": "-",
       "contentType": ["BlogPost"],
       "displayType": "Summary",
-      "differentiator": "BlogPost-Image"
+      "differentiator": "BlogPost-Image",
+      "place": "-"
+    }
+  ],
+  "MarkdownBodyPart" : [
+    {
+      "contentType": ["BlogPost"],
+      "displayType": "Summary",
+      "path": ["/"],
+      "place": "-"
+    }
+  ],
+  "TaxonomyField": [
+    {
+      "contentType": ["BlogPost"],
+      "displayType": "Summary",
+      "differentiator": "BlogPost-Category",
+      "path": ["/"],
+      "place": "-"
+    }
+  ],
+  "TaxonomyField_Display__Tags" : [
+    {
+      "contentType": ["BlogPost"],
+      "displayType": "Summary",
+      "differentiator": "BlogPost-Tags-TaxonomyField_Display__Tags",
+      "path": ["/"],
+      "place": "-"
     }
   ]
 }

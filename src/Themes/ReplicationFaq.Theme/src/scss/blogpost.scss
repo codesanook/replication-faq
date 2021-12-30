@@ -7,8 +7,23 @@
   }
 }
 
+.recent-item {
+  > .card-box {
+    padding: 5px 15px;
+    box-shadow: none;
+
+    &.-grow {
+    transition: none;
+      
+    &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
 .blog-post-content {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 
   > .title {
     font-size: 20px;
@@ -23,9 +38,7 @@
 }
 
 .content-readmore {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  font-size: 1rem;
 
   > .-textBold {
     font-weight: bold;

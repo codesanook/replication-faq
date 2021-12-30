@@ -25,6 +25,9 @@ $spacing-content: 15px 0;
   > .meta-content {
     margin: $spacing-content;
     font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
   }
 
   > .header-content.-unsetMargin,

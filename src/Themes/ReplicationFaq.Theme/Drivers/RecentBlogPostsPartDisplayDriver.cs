@@ -59,7 +59,7 @@ namespace ReplicationFaq.Theme.Drivers
                 .ListAsync();
 
             var shapeTasks = blogPosts.Select(
-                v => _contentItemDisplayManager.BuildDisplayAsync(v, _updateModelAccessor.ModelUpdater, "Summary")
+                b => _contentItemDisplayManager.BuildDisplayAsync(b, _updateModelAccessor.ModelUpdater, "Summary")
             );
 
             var blogPostShapes = await Task.WhenAll(shapeTasks);

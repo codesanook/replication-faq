@@ -8,6 +8,5 @@
 }
 
 <div class="content-readmore">
-  <div class="-textBold">@Html.Raw(Model.Html.RemoveTags(true).Ellipsize(200))</div>
-  <div><a href="@autoRoutePath.Path">Read more...</a></div>
+  <p class="">@Html.Raw(Model.Html.RemoveTags(true).Ellipsize(200)) <a href="@autoRoutePath.Path">Read more...</a></p>
 </div>
