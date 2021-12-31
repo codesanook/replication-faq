@@ -81,8 +81,21 @@ namespace ReplicationFaq.Theme
 
             UpdateBlogPostType();
             await RemoveExistingBlogPost();
-            await CreateBlogPostCategoriesAsync();
+
+            await CreateBlogPostTaxonomyAsync(
+                "Categories",
+                "Category",
+                new[] { "Setup", "Snapshot", "Transactional", "Peer to Peer", "Merge", "Sync Services", "Always On" },
+                "fas fa-globe-americas"
+            );
+            await CreateBlogPostTaxonomyAsync(
+                "Tags",
+                "Tag",
+                new[] { "indexing", "backup", "performance" }
+            );
+
             await CreateOrganizationProfileAsync();
+            await RemoveFooterWidgetAsync();
 
             return 1;
         }
@@ -350,59 +363,62 @@ namespace ReplicationFaq.Theme
             }
         }
 
-        public async Task CreateBlogPostCategoriesAsync()
+        public async Task CreateBlogPostTaxonomyAsync(string displayName, string termContentType, string[] terms, string iconClasses = null)
         {
+            // Start by Taxonomy content item that constains some tag terms 
             var taxonomyContentItem = await _session
                 .Query<ContentItem, ContentItemIndex>(q => q.ContentType == "Taxonomy")
-                .Where(i => i.DisplayText == "Categories")
+                .Where(i => i.DisplayText == displayName)
                 .FirstOrDefaultAsync();
 
+            // Remove all tag terms from TaxonomyPart of Taxonomy ContentType
+            // We won't see any record in ContentItemIndex because we don't save it by ContentManager.
             taxonomyContentItem.As<TaxonomyPart>().Terms.RemoveAll(_ => true);
 
-            var existingCategoryItems = await _session
-                .Query<ContentItem, ContentItemIndex>(q => q.ContentType == "Category")
-                .ListAsync();
-
-            foreach (var item in existingCategoryItems)
-            {
-                await _contentManager.RemoveAsync(item);
-            }
-
-            var createCategoryTasks = new[] {
-                    "Setup", "Snapshot", "Transactional", "Peer to Peer", "Merge", "Sync Services", "Always On"
-                }
-                .Select(c => CreateBlogPostCategory(c, taxonomyContentItem));
-            var categories = await Task.WhenAll(createCategoryTasks);
-
+            var createTermTasks =
+                terms.Select(c => CreateBlogTaxonomyTermContentItem(taxonomyContentItem, termContentType, c, iconClasses));
+            var categories = await Task.WhenAll(createTermTasks);
             taxonomyContentItem.Alter<TaxonomyPart>(part => part.Terms.AddRange(categories));
             _session.Save(taxonomyContentItem);
         }
 
-        private async Task<ContentItem> CreateBlogPostCategory(string title, ContentItem taxonomyContentItem)
+        // Taxonomy term are actual Tag or Category content item
+        // Category content type definition
+        // https://github.com/OrchardCMS/OrchardCore/blob/main/src/OrchardCore.Themes/TheBlogTheme/Recipes/blog.recipe.json#L515-L556
+
+        // Tag content type definition
+        // https://github.com/OrchardCMS/OrchardCore/blob/main/src/OrchardCore.Themes/TheBlogTheme/Recipes/blog.recipe.json#L473-L514
+        private async Task<ContentItem> CreateBlogTaxonomyTermContentItem(ContentItem taxonomyContentItem, string termContentType, string title, string iconClass = null)
         {
-            var categoryContentItem = await _contentManager.NewAsync("Category");
+            var termContentItem = await _contentManager.NewAsync(termContentType);
 
-            // Attach TermPart dynamically
-            categoryContentItem.Weld<TermPart>();
-            categoryContentItem.Alter<TermPart>(t => t.TaxonomyContentItemId = taxonomyContentItem.ContentItemId);
+            // Attach TermPart dynamically because it does not defined when creating Tag content type
+            // taxonomyContentItem is a parent or a container which contains this term
+            termContentItem.Weld<TermPart>();
+            termContentItem.Alter<TermPart>(t => t.TaxonomyContentItemId = taxonomyContentItem.ContentItemId);
 
-            // Alter other parts
-            categoryContentItem.DisplayText = title;
-            categoryContentItem.Alter<TitlePart>(t => t.Title = title);
+            // Alter other parts (TitlePart, PartName) which are defined in blog.recipe.json
+            termContentItem.DisplayText = title;
+            termContentItem.Alter<TitlePart>(t => t.Title = title);
 
+            // Where default path get transformed
+            // https://github.com/OrchardCMS/OrchardCore/blob/main/src/OrchardCore.Modules/OrchardCore.Autoroute/Handlers/AutoroutePartHandler.cs#L402-L403
             var url = $"{pattern.Replace(title.Trim(), "-").ToLower()}";
-            categoryContentItem.Alter<AutoroutePart>(t => t.Path = url);
-            //categoryContentItem.Content.Category.Icon.Text = "fas fa-globe-americas";
+            termContentItem.Alter<AutoroutePart>(t => t.Path = url);
 
-            // Fields are attached to a part which has same name as type
-            categoryContentItem.Alter<ContentPart>("Category", p =>
+            // Not all term types have icon classes  
+            if (!string.IsNullOrEmpty(iconClass))
             {
-                p.Alter<TextField>("Icon", f =>
+                // Fields are attached to a part which has the same name as type.
+                // We don't have a strongly type version content part here
+                // Defined alter part definition in 
+                // https://github.com/OrchardCMS/OrchardCore/blob/main/src/OrchardCore.Themes/TheBlogTheme/Recipes/blog.recipe.json#L774-L794 
+                termContentItem.Alter<ContentPart>(termContentType, p =>
                 {
-                    f.Text = "fas fa-globe-americas";
+                    p.Alter<TextField>("Icon", f => f.Text = iconClass);
                 });
-            });
-            return categoryContentItem;
+            }
+            return termContentItem;
         }
 
         private async Task CreateRecentBlogPostsWidget()
@@ -433,6 +449,16 @@ namespace ReplicationFaq.Theme
             // Attach a layer Meta data to a widget content item.
             contentItem.Weld(layerMetaData);
             await _contentManager.CreateAsync(contentItem, VersionOptions.Published);
+        }
+
+        private async Task RemoveFooterWidgetAsync()
+        {
+            // Known issue, existing raw html widget does not have Display text value
+            var contentItem = await _session
+                .Query<ContentItem, ContentItemIndex>(q => q.ContentType == "RawHtml")
+                .FirstOrDefaultAsync();
+
+            await _contentManager.RemoveAsync(contentItem);
         }
     }
 }

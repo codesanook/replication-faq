@@ -16,8 +16,8 @@
 #     Value: A content of downloaded publish profile from your App Service in Azure portal
 #     To set with GitHub CLI, run: 
 #       gh secret set AZURE_WEBAPP_PUBLISH_PROFILE < publish-profile.xml --repo owner/repository-name
-#
 #     *** Before downloading a publish profile, please make sure that you have set a app service's configuration WEBSITE_WEBDEPLOY_USE_SCM = true.
+
 #   - Name: WEB_PROJECT_DIR
 #     Value: a directory of your main project which contains *.csproj without / at the end, e.g. src/App
 #     To set with GitHub CLI, run: 
@@ -37,25 +37,18 @@ env:
   OUTPUT_DIR: publish # Relative to a current working directory
   DOTNET_VERSION: 5.0.x # Set .NET version to use
   NODE_VERSION: 12.x # Set Node.js version to use
-  WEB_PROJECT_DIR: ${{ secrets.WEB_PROJECT_DIR }}
 
 jobs:
   build:
     # Find more virtual environments
     # https://www.dotnetthailand.com/programming-cookbook/github-actions/github-actions-fundamentals#findmorevirtualenvironments
     runs-on: ubuntu-latest
-    # You can use default run to set default working directory
-    # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_iddefaultsrun
-    defaults:
-      run:
-        working-directory: ${{ env.WEB_PROJECT_DIR }}
 
     steps:
       - name: Checkout the latest source code from "${{ github.ref }}" branch and "${{ github.sha }}" commit.
         uses: actions/checkout@v2
 
       - name: Set YARN_WORKSPACES_EXIST variable.
-        working-directory: ${{ github.workspace }}
         run: |
           workspaces_info_result=$(yarn workspaces info > /dev/null 2>&1; echo $?; exit 0)
           if [ $workspaces_info_result -eq 0 ]; then echo "YARN_WORKSPACES_EXIST=1" >> $GITHUB_ENV; fi
@@ -69,7 +62,6 @@ jobs:
 
       - name: Build all Node.js projects if Yarn Workspaces exists.
         if: ${{ env.YARN_WORKSPACES_EXIST == 1 }}
-        working-directory: ${{ github.workspace }}
         run: |
           yarn install
           yarn workspaces run build
@@ -83,8 +75,9 @@ jobs:
       - name: Restore Nuget packages.
         run: dotnet restore
 
-      - name: Publish .NET project to "${{ env.WEB_PROJECT_DIR }}/${{ env.OUTPUT_DIR }}" folder
+      - name: Publish the main project to "${{ secrets.WEB_PROJECT_DIR }}/${{ env.OUTPUT_DIR }}" folder
         run: dotnet publish --configuration Release --output ${{ env.OUTPUT_DIR }} --no-restore
+        working-directory: ${{ secrets.WEB_PROJECT_DIR }}
 
       - name: Deploy to Azure App Service code publish
         uses: azure/webapps-deploy@v2
@@ -92,4 +85,4 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           # It looks like a package option does not take "working-directory" into account, it still use default GITHUB_WORKSPACE value.
-          package: ${{ env.WEB_PROJECT_DIR }}/${{ env.OUTPUT_DIR }} 
+          package: ${{ secrets.WEB_PROJECT_DIR }}/${{ env.OUTPUT_DIR }} 

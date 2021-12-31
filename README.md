@@ -20,7 +20,6 @@ $ yarn workspace replication-faq-theme run watch
 **Note** a default Linux app service or a custom Linux container, any nested JSON key structure in the app setting name like ApplicationInsights:InstrumentationKey needs to be configured in App Service as ApplicationInsights__InstrumentationKey for the key name. 
 In other words, any : should be replaced by __ (double underscore).
 
-
 dotnet add reference ../Modules/Codesanook.OrganizationProfile/Codesanook.OrganizationProfile.csproj
 
 Add a module to a theme
@@ -44,3 +43,11 @@ admin@replicationfaq.com
 
 Enable 
 Replication FAQ theme
+
+
+az group create --location eastus2 --name replication-faq-resource-group
+
+  sku B1
+
+
+

@@ -98,6 +98,9 @@
         @await DisplayAsync(socialNetworkShapeMobile)
       </div>
     </div>
+    <footer>
+      @await RenderSectionAsync("Footer", required: false)
+    </footer>
 
     <resources type="FootScript" />
     <script>

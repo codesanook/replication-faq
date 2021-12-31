@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6DD07267-482D-435C-9F7F-CC6457ABB0E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplicationFaq.Cms", "src\ReplicationFaq.Cms\ReplicationFaq.Cms.csproj", "{B6C1D024-93DD-4A76-98D3-BC155321A3EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{E6D37790-A485-4084-AE5C-24F514142A4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplicationFaq.Theme", "src\Themes\ReplicationFaq.Theme\ReplicationFaq.Theme.csproj", "{C8B77FD5-1192-4A82-93F8-6A1461D30FFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{B39B3BBD-C2D2-46D7-A567-8F8F25CBE47B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codesanook.OrganizationProfile", "src\Modules\Codesanook.OrganizationProfile\Codesanook.OrganizationProfile.csproj", "{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6C1D024-93DD-4A76-98D3-BC155321A3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C1D024-93DD-4A76-98D3-BC155321A3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C1D024-93DD-4A76-98D3-BC155321A3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C1D024-93DD-4A76-98D3-BC155321A3EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8B77FD5-1192-4A82-93F8-6A1461D30FFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B77FD5-1192-4A82-93F8-6A1461D30FFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8B77FD5-1192-4A82-93F8-6A1461D30FFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8B77FD5-1192-4A82-93F8-6A1461D30FFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6C1D024-93DD-4A76-98D3-BC155321A3EC} = {6DD07267-482D-435C-9F7F-CC6457ABB0E5}
+		{E6D37790-A485-4084-AE5C-24F514142A4C} = {6DD07267-482D-435C-9F7F-CC6457ABB0E5}
+		{C8B77FD5-1192-4A82-93F8-6A1461D30FFA} = {E6D37790-A485-4084-AE5C-24F514142A4C}
+		{B39B3BBD-C2D2-46D7-A567-8F8F25CBE47B} = {6DD07267-482D-435C-9F7F-CC6457ABB0E5}
+		{A5ACF67F-AA0B-40D3-BE33-F9BAE4431F2F} = {B39B3BBD-C2D2-46D7-A567-8F8F25CBE47B}
+	EndGlobalSection
+EndGlobal
